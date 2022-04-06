@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看学生</title>
+    <link rel="stylesheet" type="text/css" href="lib-master/theme-chalk/index.css"/>
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-page-header @back="goBack" style="margin: 20px auto" content="查看学生"></el-page-header>
+    <el-divider></el-divider>
+    <el-table
+            :data="students"
+            height="730"
+            border
+            :row-class-name="tableRowClassName"
+            style="width: 100%">
+        <el-table-column
+                prop="sno"
+                label="学号"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="sname"
+                label="姓名"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="sbirth"
+                label="出生日期">
+        </el-table-column>
+        <el-table-column
+                prop="ssex"
+                label="性别">
+        </el-table-column>
+        <el-table-column
+                prop="zno"
+                label="专业号">
+        </el-table-column>
+        <el-table-column
+                prop="sclass"
+                label="学生班级">
+        </el-table-column>
+    </el-table>
+</div>
+</body>
+<script src="static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib-master/index.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/axios-0.19.2/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                students: [{
+                    sno: 1907119203,
+                    sname: "你好",
+                    sbirth: "2020-05-02",
+                    ssex: "男",
+                    zno: "1102",
+                    sclass: "默认班级"
+                }]
+            }
+        },
+        methods: {
+            goBack: function () {
+                window.location = "./index.html"
+            },
+            getData: function (){
+                let that = this
+                axios.get("./php/show_student.php",{
+                }).then(function (response){
+                    that.students = response.data
+                }).catch(function (err){
+                    console.log(err)
+                })
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 4 == 1) {
+                    return 'warning-row';
+                } else if (rowIndex % 4 == 3) {
+                    return 'success-row';
+                }
+                return '';
+            }
+        },
+        created: function () {
+            this.getData()
+        }
+    })
+</script>
+</html>

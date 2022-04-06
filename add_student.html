@@ -1,0 +1,170 @@
+<?php require_once("conn.php")?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>添加学生</title>
+    <link rel="stylesheet" type="text/css" href="lib-master/theme-chalk/index.css"/>
+</head>
+<body>
+<div id="app">
+    <el-page-header @back="goBack" style="margin-top: 20px" content="新增学生"></el-page-header>
+    <el-divider></el-divider>
+    <el-row style="margin-top: 50px" type="flex" justify="center">
+        <el-col :span="6">
+            <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+                <el-form-item prop="sno" label="学生学号">
+                    <el-input clearable
+                              maxlength="10"
+                              style="width: 200px" placeholder="请输入学号" v-model="form.sno"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item prop="sname" label="学生姓名">
+                    <el-input clearable
+                              style="width: 200px" placeholder="请输入姓名" v-model="form.sname"></el-input>
+                </el-form-item>
+                <el-form-item prop="sbirth" label="出生日期">
+                    <el-date-picker format="yyyy-MM-dd" type="date" placeholder="选择日期"
+                                    v-model="form.sbirth" value-format="yyyy-MM-dd"
+                                    style="width: 200px;"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="学生性别">
+                    <el-radio-group v-model="form.ssex">
+                        <el-radio label="男"></el-radio>
+                        <el-radio label="女"></el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="专业号">
+                    <el-select v-model="form.zno" placeholder="请选择专业号">
+                        <el-option
+                                v-for="item in options"
+                                :key="item.zno"
+                                :label="item.zname"
+                                :value="item.zno">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="学生班级">
+                    <el-autocomplete
+                            class="inline-input"
+                            v-model="form.sclass"
+                            :fetch-suggestions="querySearch"
+                            placeholder="请输入班级"
+                    ></el-autocomplete>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submit">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
+    </el-row>
+
+</div>
+<form name="add_student" method="post" action="php/insert_student.php">
+
+</form>
+</body>
+
+<script src="./static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib-master/index.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/axios-0.19.2/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                form: {
+                    sno: null,
+                    sname: '',
+                    sbirth: '',
+                    ssex: '',
+                    zno: '',
+                    sclass: ''
+                },
+                options: [],
+                rules: {
+                    sno: [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!value) {
+                                    return callback(new Error("学号不能为空"))
+                                }
+                            }, trigger: 'blur'
+                        }
+                    ],
+                    sbirth: [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!value) {
+                                    return callback(new Error("出生日期不能为空"))
+                                }
+                            }, trigger: 'blur'
+                        }
+                    ],
+                    sname: [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!value) {
+                                    return callback(new Error("姓名不能为空"))
+                                }
+                            }, trigger: 'blur'
+                        }
+                    ]
+                }
+            }
+        },
+        methods: {
+            goBack: function () {
+                window.location = "./index.html"
+            },
+            submit: function () {
+                let that = this
+                axios.post('./php/insert_student.php', {
+                    sno: this.form.sno,
+                    sname: this.form.sname,
+                    sbirth: this.form.sbirth,
+                    ssex: this.form.ssex,
+                    sclass: this.form.sclass,
+                    zno: this.form.zno
+                }).then(function (response) {
+                    console.log(response)
+                    if (response.data == "200") {
+                        that.open()
+                    } else {
+                        that.add_fail(response.data)
+                    }
+                }).catch(function (err) {
+                    console.log(err)
+                })
+            },
+            open: function () {
+                let that = this
+                this.$alert("学号：" + that.form.sno, '添加成功', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        that.form = {}
+                    }
+                });
+            },
+            add_fail: function (err) {
+                this.$alert(err, '添加失败', {
+                    confirmButtonText: '确定'
+                });
+            },
+            querySearch(queryString, cb) {
+                let results = [{value: "软件工程4-2班"}]
+                // 调用 callback 返回建议列表的数据
+                cb(results);
+            },
+        },
+        created: function (){
+            let that = this
+            axios.post("./php/get_specialty.php", {
+
+            }).then(function (res){
+                that.options = res.data
+            })
+        }
+    })
+</script>
+</html>

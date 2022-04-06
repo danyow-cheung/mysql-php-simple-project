@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看班级</title>
+    <link rel="stylesheet" type="text/css" href="lib-master/theme-chalk/index.css"/>
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-page-header @back="goBack" style="margin: 20px auto" content="查看班级"></el-page-header>
+    <el-divider></el-divider>
+    <el-table
+            :data="specialties"
+            height="730"
+            border
+            :row-class-name="tableRowClassName"
+            width="455"
+            >
+        <el-table-column
+                prop="zno"
+                label="专业号"
+                width="220">
+        </el-table-column>
+        <el-table-column
+                prop="zname"
+                label="专业名称"
+                width="235">
+        </el-table-column>
+    </el-table>
+</div>
+</body>
+<script src="static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib-master/index.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/axios-0.19.2/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {specialties: [{}]}
+        },
+        methods: {
+            goBack: function () {
+                window.location = "./index.html"
+            },
+            getData: function (){
+                let that = this
+                axios("./php/show_specialty.php",{
+                }).then(function (response){
+                    console.log(response)
+                    that.specialties = response.data
+                }).catch(function (err){
+
+                })
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 4 == 1) {
+                    return 'warning-row';
+                } else if (rowIndex % 4 == 3) {
+                    return 'success-row';
+                }
+                return '';
+            }
+        },
+        created: function (){
+            this.getData()
+        }
+    })
+</script>
+</html>

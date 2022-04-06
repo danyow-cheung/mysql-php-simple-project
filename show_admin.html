@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看管理员</title>
+    <link rel="stylesheet" type="text/css" href="lib-master/theme-chalk/index.css"/>
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-page-header @back="goBack" style="margin: 20px auto" content="查看管理员"></el-page-header>
+    <el-divider></el-divider>
+    <el-table
+            :data="admins"
+            height="730"
+            border
+            :row-class-name="tableRowClassName"
+            width="455">
+        <el-table-column
+                prop="username"
+                label="管理员名称"
+                width="220">
+        </el-table-column>
+        <el-table-column
+                prop="password"
+                label="密码"
+                width="235">
+        </el-table-column>
+    </el-table>
+</div>
+</body>
+<script src="static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib-master/index.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/axios-0.19.2/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {admins: [{}]}
+        },
+        methods: {
+            goBack: function () {
+                window.location = "./index.html"
+            },
+            getData: function (){
+                let that = this
+                axios("./php/show_admin.php",{
+                }).then(function (response){
+                    that.admins = response.data
+                }).catch(function (err){
+                    console.log(err)
+                })
+            },
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 4 == 1) {
+                    return 'warning-row';
+                } else if (rowIndex % 4 == 3) {
+                    return 'success-row';
+                }
+                return '';
+            }
+        },
+        created: function (){
+            this.getData()
+        }
+    })
+</script>
+</html>

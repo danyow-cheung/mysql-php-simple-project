@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>学生信息管理系统</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" type="text/css" href="lib-master/theme-chalk/index.css"/>
+
+    <style type="text/css">
+        body {
+            background-color: #fff;
+        }
+        .box-card {
+            width: 50vw;
+            margin: 70px auto;
+        }
+
+        .el-card__header{
+            font-size: 20px;
+            font-family: "PingFang SC";
+            background-color: #333333;
+            color: #e5e5e5;
+        }
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .s-item{
+            margin: 25px auto;
+        }
+        .s-title{
+            font-family: "Hiragino Sans GB";
+            font-size: 14px;
+            margin-left: 15px;
+            color: #a2a2a2;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <el-row type="flex" justify="center"><el-col :span="4">学生管理系统</el-col></el-row>
+        </div>
+        <div>
+            <div class="s-title">学生管理</div>
+            <el-row class="s-item" :gutter="12">
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <el-link href="add_student.html" type="primary" :underline="false">添加学生</el-link>
+                    </el-card>
+                </el-col>
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <el-link href="show_student.html" type="primary" :underline="false">查看学生</el-link>
+                    </el-card>
+                </el-col>
+            </el-row>
+            <div class="s-title">专业管理</div>
+            <el-row class="s-item" :gutter="12">
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <el-link href="add_specialty.html" type="primary" :underline="false">添加专业</el-link>
+                    </el-card>
+                </el-col>
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <el-link href="show_specialty.html" type="primary" :underline="false">查看专业</el-link>
+                    </el-card>
+                </el-col>
+            </el-row>
+            <div class="s-title">管理员</div>
+            <el-row class="s-item" :gutter="12">
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <el-link href="add_admin.html" type="primary" :underline="false">添加管理员</el-link>
+                    </el-card>
+                </el-col>
+                <el-col :span="12">
+                    <el-card shadow="hover">
+                        <el-link href="show_admin.html" type="primary" :underline="false">查看管理员</el-link>
+                    </el-card>
+                </el-col>
+            </el-row>
+        </div>
+    </el-card>
+</div>
+
+</body>
+<script src="./static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib-master/index.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {visible: false}
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加专业</title>
+    <link rel="stylesheet" type="text/css" href="lib-master/theme-chalk/index.css"/>
+</head>
+<body>
+<div id="app">
+    <el-page-header @back="goBack" style="margin-top: 20px"  content="新增专业"></el-page-header>
+    <el-divider></el-divider>
+    <el-row style="margin-top: 50px" type="flex" justify="center">
+        <el-col :span="6">
+            <el-form rel="form" :model="form" label-width="80px">
+                <el-form-item label="专业号">
+                    <el-input style="width: 200px" placeholder="请输入专业号" v-model="form.zno"></el-input>
+                </el-form-item>
+                <el-form-item label="专业名称">
+                    <el-input style="width: 200px" placeholder="请输入专业名称" v-model="form.zname"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submit">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script src="static/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="lib-master/index.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/axios-0.19.2/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                form: {
+                    zno: '',
+                    zname: ''
+                }
+            }
+        },
+        methods: {
+            goBack: function () {
+                window.location = "./index.html"
+            },
+            submit: function (){
+                let that = this
+                axios.post("./php/insert_specialty.php",{
+                    zno: that.form.zno,
+                    zname: that.form.zname
+                }).then(function (res){
+                    if (res.data == "200"){
+                        that.open()
+                    } else {
+                        that.add_fail(res.data)
+                    }
+                }).catch(function (err){
+                    console.log(err)
+                })
+            },
+            open: function () {
+                let that = this
+                this.$alert("专业号："+that.form.zno, '添加成功', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        that.form = {}
+                    }
+                });
+            },
+            add_fail: function (err) {
+                this.$alert(err, '添加失败', {
+                    confirmButtonText: '确定'
+                });
+            }
+        }
+    })
+</script>
+</html>
